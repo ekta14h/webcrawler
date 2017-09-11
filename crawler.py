@@ -3,8 +3,9 @@ from bs4 import BeautifulSoup
 import time
 
 start_page = "https://en.wikipedia.org/wiki/Python_(programming_language)"
+max_steps = 25
 
-def continue_crawl(search_history, target_url):
+def continue_crawl(search_history, target_url, max_steps):
   """Checks for stopping criteria for target_url"""
   if search_history == []:
     return True
@@ -14,7 +15,7 @@ def continue_crawl(search_history, target_url):
   elif len(search_history) > max_steps:
     print("The search has gone on suspiciously long, aborting search!")
     return False
-  elif len(set(search_history)) in len(search_history):
+  elif len(set(search_history)) < len(search_history):
     print("We've arrived at an article we've already seen, aborting search!")
     return False
   else:
@@ -43,7 +44,7 @@ if __name__ == '__main__':
   all_text.append(soup.p)
 
   while True:
-    if continue_crawl(search_history, target_url):
+    if continue_crawl(search_history, target_url, max_steps):
       print("sleeping for feq secs to not overload the server")
       time.sleep(2)
       target_url = fetch_next_url(target_url, search_history, all_text)
